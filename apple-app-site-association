@@ -7,7 +7,15 @@
     		"paths": ["/reset/*", "/reset/password/*"]
     	},
     	{
+    		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.staging",
+    		"paths": ["/reset/*", "/reset/password/*"]
+    	},
+    	{
     		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.qa",
+    		"paths": ["/reset/*", "/reset/password/*"]
+    	},
+    	{
+    		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.automation",
     		"paths": ["/reset/*", "/reset/password/*"]
     	}
     ]
