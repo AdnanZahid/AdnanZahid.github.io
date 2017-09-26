@@ -3,7 +3,7 @@
     "apps": [],
     "details": [
     	{
-    		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.qa",
+    		"appID": "LCXH23EWLR.com.careem.mobile.app.icma*",
     		"paths": ["*"]
     	}
     ]
