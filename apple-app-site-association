@@ -4,19 +4,19 @@
     "details": [
     	{
     		"appID": "LCXH23EWLR.com.careem.mobile.app.icma",
-    		"paths": ["/reset/*", "/reset/password/*"]
+    		"paths": ["/reset/*"]
     	},
     	{
     		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.staging",
-    		"paths": ["/reset/*", "/reset/password/*"]
+    		"paths": ["/reset/*"]
     	},
     	{
     		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.qa",
-    		"paths": ["/reset/*", "/reset/password/*"]
+    		"paths": ["/reset/*"]
     	},
     	{
     		"appID": "LCXH23EWLR.com.careem.mobile.app.icma.automation",
-    		"paths": ["/reset/*", "/reset/password/*"]
+    		"paths": ["/reset/*"]
     	}
     ]
   }
