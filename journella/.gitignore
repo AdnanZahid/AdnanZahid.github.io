@@ -1,0 +1,7 @@
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
+scripts/copy_to_github_pages.sh
