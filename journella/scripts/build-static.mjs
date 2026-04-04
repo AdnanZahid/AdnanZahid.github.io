@@ -3,7 +3,7 @@ import path from "node:path";
 
 const rootDir = process.cwd();
 const GENERATED_NOTICE = "<!-- Generated file: edit src/... and run npm run build -->";
-const APP_STORE_URL = "APP_STORE_URL_HERE";
+const APP_STORE_URL = "https://apps.apple.com/app/journella-daily-planner/id6761329619";
 
 const pages = [
   {
