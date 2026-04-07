@@ -1,0 +1,265 @@
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <span class="eyebrow">Blog</span>
+          <h1>Notes, updates, and thoughtful planning ideas from Journella.</h1>
+          <p class="lead">
+            Every post lives here on one calm, readable page. Browse the latest update, jump to any
+            permalink, and share a direct link to the exact post you want someone to read.
+          </p>
+          <div class="hero-meta">
+            <span class="pill">Markdown-powered publishing</span>
+            <span class="pill">One-page archive</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="blog-main">
+      <div class="wrap blog-stack">
+{{BLOG_POSTS}}
+      </div>
+    </section>
+
+    <dialog class="share-dialog" id="share-dialog" data-share-dialog aria-labelledby="share-dialog-title">
+      <div class="share-dialog-shell">
+        <button
+          class="share-dialog-close"
+          type="button"
+          data-share-close
+          aria-label="Close share dialog"
+        >
+          Close
+        </button>
+        <div class="share-dialog-copy">
+          <h3 id="share-dialog-title">Share this post</h3>
+          <p class="small">Share on your social media or copy the link directly.</p>
+        </div>
+        <div class="share-actions share-actions--dialog">
+          <a
+            class="share-link"
+            data-share-platform="x"
+            data-platform-label="X / Twitter"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            X / Twitter
+          </a>
+          <a
+            class="share-link"
+            data-share-platform="facebook"
+            data-platform-label="Facebook"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Facebook
+          </a>
+          <a
+            class="share-link"
+            data-share-platform="linkedin"
+            data-platform-label="LinkedIn"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            LinkedIn
+          </a>
+          <a
+            class="share-link"
+            data-share-platform="reddit"
+            data-platform-label="Reddit"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Reddit
+          </a>
+          <a
+            class="share-link"
+            data-share-platform="whatsapp"
+            data-platform-label="WhatsApp"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            WhatsApp
+          </a>
+          <a
+            class="share-link"
+            data-share-platform="telegram"
+            data-platform-label="Telegram"
+            href="#"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Telegram
+          </a>
+          <button
+            class="share-link share-link--button"
+            type="button"
+            data-copy-link
+          >
+            Copy link
+          </button>
+        </div>
+        <p class="share-status small" data-share-status aria-live="polite"></p>
+      </div>
+    </dialog>
+
+    <script>
+      (() => {
+        const shareBuilders = {
+          x: ({ title, url }) => `https://twitter.com/intent/tweet?text=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+          facebook: ({ url }) => `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
+          linkedin: ({ url }) => `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(url)}`,
+          reddit: ({ title, url }) => `https://www.reddit.com/submit?title=${encodeURIComponent(title)}&url=${encodeURIComponent(url)}`,
+          whatsapp: ({ title, url }) => `https://api.whatsapp.com/send?text=${encodeURIComponent(`${title} ${url}`)}`,
+          telegram: ({ title, url }) => `https://t.me/share/url?url=${encodeURIComponent(url)}&text=${encodeURIComponent(title)}`
+        };
+
+        const baseUrl = window.location.origin && window.location.origin !== "null"
+          ? `${window.location.origin}${window.location.pathname}`
+          : window.location.href.split("#")[0];
+        const dialog = document.querySelector("[data-share-dialog]");
+        const dialogShell = dialog?.querySelector(".share-dialog-shell");
+        const closeButton = dialog?.querySelector("[data-share-close]");
+        const copyButton = dialog?.querySelector("[data-copy-link]");
+        const status = dialog?.querySelector("[data-share-status]");
+        const shareLinks = dialog ? Array.from(dialog.querySelectorAll("[data-share-platform]")) : [];
+        let lastTrigger = null;
+
+        async function copyLink(text) {
+          if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+            await navigator.clipboard.writeText(text);
+            return;
+          }
+
+          const textArea = document.createElement("textarea");
+          textArea.value = text;
+          textArea.setAttribute("readonly", "");
+          textArea.style.position = "absolute";
+          textArea.style.left = "-9999px";
+          document.body.appendChild(textArea);
+          textArea.select();
+
+          const copied = document.execCommand("copy");
+          document.body.removeChild(textArea);
+
+          if (!copied) {
+            throw new Error("Copy command failed.");
+          }
+        }
+
+        function resetStatus() {
+          if (status) {
+            status.textContent = "";
+          }
+        }
+
+        function closeDialog() {
+          if (!dialog) {
+            return;
+          }
+
+          if (typeof dialog.close === "function") {
+            if (dialog.open) {
+              dialog.close();
+            }
+          } else {
+            dialog.removeAttribute("open");
+            document.body.classList.remove("dialog-open");
+            resetStatus();
+            lastTrigger?.focus();
+          }
+        }
+
+        function openDialog(trigger) {
+          if (!dialog) {
+            return;
+          }
+
+          const anchor = trigger.dataset.postAnchor;
+          const title = trigger.dataset.postTitle || "Journella blog post";
+          const postUrl = `${baseUrl}#${anchor}`;
+
+          shareLinks.forEach((link) => {
+            const platform = link.dataset.sharePlatform;
+            const buildShareUrl = shareBuilders[platform];
+            const label = link.dataset.platformLabel || link.textContent.trim();
+
+            if (!buildShareUrl) {
+              return;
+            }
+
+            link.setAttribute("href", buildShareUrl({ title, url: postUrl }));
+            link.setAttribute("aria-label", `Share ${title} on ${label}`);
+          });
+
+          if (copyButton) {
+            copyButton.dataset.copyUrl = postUrl;
+            copyButton.setAttribute("aria-label", `Copy link for ${title}`);
+          }
+
+          resetStatus();
+          lastTrigger = trigger;
+
+          if (typeof dialog.showModal === "function") {
+            if (!dialog.open) {
+              dialog.showModal();
+            }
+          } else {
+            dialog.setAttribute("open", "");
+          }
+
+          document.body.classList.add("dialog-open");
+        }
+
+        document.querySelectorAll("[data-share-trigger]").forEach((trigger) => {
+          trigger.addEventListener("click", () => {
+            openDialog(trigger);
+          });
+        });
+
+        copyButton?.addEventListener("click", async () => {
+          const postUrl = copyButton.dataset.copyUrl;
+
+          if (!postUrl) {
+            return;
+          }
+
+          try {
+            await copyLink(postUrl);
+            if (status) {
+              status.textContent = "Link copied to clipboard.";
+            }
+          } catch (error) {
+            if (status) {
+              status.textContent = "Copy failed. You can copy the URL from your address bar.";
+            }
+          }
+        });
+
+        closeButton?.addEventListener("click", () => {
+          closeDialog();
+        });
+
+        dialog?.addEventListener("cancel", (event) => {
+          event.preventDefault();
+          closeDialog();
+        });
+
+        dialog?.addEventListener("close", () => {
+          document.body.classList.remove("dialog-open");
+          resetStatus();
+          lastTrigger?.focus();
+        });
+
+        dialog?.addEventListener("click", (event) => {
+          if (dialogShell && !dialogShell.contains(event.target)) {
+            closeDialog();
+          }
+        });
+      })();
+    </script>

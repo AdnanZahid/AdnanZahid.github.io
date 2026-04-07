@@ -3,5 +3,8 @@
   "private": true,
   "scripts": {
     "build": "node scripts/build-static.mjs"
+  },
+  "dependencies": {
+    "markdown-it": "^14.1.1"
   }
 }
