@@ -197,7 +197,6 @@ function renderBlogPosts(posts) {
   if (posts.length === 0) {
     return `
       <section class="blog-empty" aria-live="polite">
-        <span class="eyebrow">No posts yet</span>
         <h2>The blog is ready when the first update is.</h2>
         <p class="lead">
           New product notes, thoughtful updates, and planning ideas will appear here as soon as they are published.
