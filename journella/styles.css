@@ -979,8 +979,9 @@ h3 {
 
 .blog-richtext p > img:only-child {
   display: block;
-  width: min(100%, 480px);
-  margin: 22px auto;
+  float: right;
+  width: min(100%, 320px);
+  margin: 6px 0 18px 22px;
 }
 
 .share-actions {
@@ -1361,6 +1362,11 @@ body.dialog-open {
 
   .share-link {
     flex: 1 1 140px;
+  }
+
+  .blog-richtext p > img:only-child {
+    float: none;
+    margin: 18px auto;
   }
 
   .share-dialog-shell {
